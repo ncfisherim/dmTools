@@ -29,183 +29,56 @@
     --panel-w: 340px;
   }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Crimson Text', Georgia, serif;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Text', Georgia, serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-  /* TOOLBAR */
-  #toolbar {
-    height: 48px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0 12px;
-    flex-shrink: 0;
-    z-index: 100;
-  }
-
-  #toolbar .title {
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    color: var(--gold);
-    letter-spacing: 0.08em;
-    margin-right: 12px;
-    white-space: nowrap;
-  }
-
+  #toolbar { height: 48px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 4px; padding: 0 12px; flex-shrink: 0; z-index: 100; }
+  #toolbar .title { font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold); letter-spacing: 0.08em; margin-right: 12px; white-space: nowrap; }
   .sep { width: 1px; height: 28px; background: var(--border); margin: 0 6px; }
 
-  .tool-btn {
-    height: 32px;
-    padding: 0 10px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    color: var(--text-dim);
-    font-family: 'Crimson Text', serif;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
+  .tool-btn { height: 32px; padding: 0 10px; background: transparent; border: 1px solid transparent; border-radius: 4px; color: var(--text-dim); font-family: 'Crimson Text', serif; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap; transition: all 0.15s; }
   .tool-btn:hover { background: var(--surface2); border-color: var(--border); color: var(--text); }
   .tool-btn.active { background: var(--surface2); border-color: var(--gold-dim); color: var(--gold); }
   .tool-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-  .terrain-swatch {
-    width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--border2); cursor: pointer; flex-shrink: 0;
-    transition: transform 0.1s;
-  }
+  .terrain-swatch { width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--border2); cursor: pointer; flex-shrink: 0; transition: transform 0.1s; }
   .terrain-swatch:hover { transform: scale(1.15); }
   .terrain-swatch.active { outline: 2px solid var(--gold); outline-offset: 1px; }
 
   #brush-size-wrap { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); }
   #brush-size { width: 60px; accent-color: var(--gold); }
 
-  .breadcrumb {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-muted);
-  }
+  .breadcrumb { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
   .breadcrumb span { cursor: pointer; transition: color 0.15s; }
   .breadcrumb span:hover { color: var(--gold); }
   .breadcrumb span.current { color: var(--text-dim); cursor: default; }
   .breadcrumb .crumb-sep { color: var(--text-muted); }
 
-  /* MAIN AREA */
-  #main {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-    position: relative;
-  }
+  #main { flex: 1; display: flex; overflow: hidden; position: relative; }
 
-  /* CANVAS AREA */
-  #canvas-wrap {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    cursor: crosshair;
-  }
-  #canvas-wrap.pan-mode { cursor: grab; }
-  #canvas-wrap.pan-mode:active { cursor: grabbing; }
+  #canvas-wrap { flex: 1; position: relative; overflow: hidden; cursor: grab; }
+  #canvas-wrap.paint-mode { cursor: crosshair; }
 
-  #map-canvas {
-    position: absolute;
-    top: 0; left: 0;
-    image-rendering: pixelated;
-  }
+  #map-canvas { position: absolute; top: 0; left: 0; }
+  #grid-canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
 
-  #grid-canvas {
-    position: absolute;
-    top: 0; left: 0;
-    pointer-events: none;
-    image-rendering: pixelated;
-  }
-
-  #marker-layer {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-  }
+  /* marker + image layer sits above canvas but only intercepts its own elements */
+  #marker-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
 
   /* MARKERS */
-  .marker {
-    position: absolute;
-    transform: translate(-50%, -100%);
-    pointer-events: all;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    user-select: none;
-  }
+  .marker { position: absolute; transform: translate(-50%, -100%); pointer-events: all; cursor: pointer; display: flex; flex-direction: column; align-items: center; user-select: none; }
   .marker:hover .marker-pin { filter: brightness(1.3); }
-  .marker-pin {
-    width: 28px; height: 28px;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    border: 2px solid rgba(0,0,0,0.4);
-    transition: filter 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .marker-pin svg {
-    transform: rotate(45deg);
-    width: 13px; height: 13px;
-  }
-  .marker-label {
-    margin-top: 4px;
-    font-size: 11px;
-    font-family: 'Cinzel', serif;
-    color: var(--text);
-    text-shadow: 0 1px 3px #000, 0 0 6px #000;
-    white-space: nowrap;
-    letter-spacing: 0.04em;
-  }
+  .marker-pin { border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid rgba(0,0,0,0.4); transition: filter 0.15s; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .marker-pin svg { transform: rotate(45deg); width: 55%; height: 55%; flex-shrink: 0; }
+  .marker-pin img { transform: rotate(45deg); width: 100%; height: 100%; object-fit: cover; }
+  .marker-label { font-family: 'Cinzel', serif; color: var(--text); text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; letter-spacing: 0.04em; }
   .marker.type-town .marker-pin { background: #4a7a4a; }
   .marker.type-dungeon .marker-pin { background: #7a2a2a; }
   .marker.type-npc .marker-pin { background: #4a4a8a; }
+  .marker.has-custom-img .marker-pin { background: transparent; border-color: var(--gold-dim); }
 
   /* CONTEXT MENU */
-  #ctx-menu {
-    position: fixed;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    padding: 4px;
-    z-index: 1000;
-    min-width: 160px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    display: none;
-  }
-  .ctx-item {
-    padding: 7px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-dim);
-    transition: all 0.1s;
-  }
+  #ctx-menu { position: fixed; background: var(--surface); border: 1px solid var(--border2); border-radius: 6px; padding: 4px; z-index: 1000; min-width: 160px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: none; }
+  .ctx-item { padding: 7px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; color: var(--text-dim); transition: all 0.1s; }
   .ctx-item:hover { background: var(--surface2); color: var(--text); }
   .ctx-item svg { width: 13px; height: 13px; flex-shrink: 0; }
   .ctx-item.town svg { color: #5a9a5a; }
@@ -214,275 +87,88 @@
   .ctx-sep { height: 1px; background: var(--border); margin: 3px 0; }
 
   /* SIDE PANEL */
-  #side-panel {
-    width: var(--panel-w);
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex-shrink: 0;
-    transition: width 0.2s;
-  }
+  #side-panel { width: var(--panel-w); background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; transition: width 0.2s; }
   #side-panel.hidden { width: 0; border-left: none; }
 
-  #panel-header {
-    padding: 14px 16px 10px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  #panel-type-badge {
-    font-size: 10px;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 0.08em;
-    padding: 2px 7px;
-    border-radius: 3px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  #panel-name-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--gold);
-    font-family: 'Cinzel', serif;
-    font-size: 16px;
-    outline: none;
-    width: 100%;
-  }
+  #panel-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 8px; }
+  #panel-type-badge { font-size: 10px; font-family: 'Cinzel', serif; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+  #panel-name-input { flex: 1; background: transparent; border: none; color: var(--gold); font-family: 'Cinzel', serif; font-size: 16px; outline: none; width: 100%; }
   #panel-name-input::placeholder { color: var(--text-muted); }
-  #panel-close {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    padding: 0 0 0 4px;
-    flex-shrink: 0;
-  }
+  #panel-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 0 0 0 4px; flex-shrink: 0; }
   #panel-close:hover { color: var(--text); }
 
-  #panel-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
+  #panel-body { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 14px; }
   #panel-body::-webkit-scrollbar { width: 4px; }
   #panel-body::-webkit-scrollbar-track { background: transparent; }
   #panel-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-  .panel-section label {
-    display: block;
-    font-size: 10px;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-  }
-  .panel-section textarea, .panel-section input[type="text"] {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: 'Crimson Text', serif;
-    font-size: 14px;
-    padding: 8px 10px;
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.15s;
-    line-height: 1.5;
-  }
-  .panel-section textarea:focus, .panel-section input[type="text"]:focus {
-    border-color: var(--gold-dim);
-  }
+  .panel-section label { display: block; font-size: 10px; font-family: 'Cinzel', serif; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
+  .panel-section textarea, .panel-section input[type="text"] { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'Crimson Text', serif; font-size: 14px; padding: 8px 10px; resize: vertical; outline: none; transition: border-color 0.15s; line-height: 1.5; }
+  .panel-section textarea:focus, .panel-section input[type="text"]:focus { border-color: var(--gold-dim); }
   .panel-section textarea { min-height: 80px; }
+
+  /* MARKER IMAGE UPLOAD */
+  #marker-img-section { display: flex; flex-direction: column; gap: 8px; }
+  #marker-img-preview { width: 100%; height: 80px; border: 1px solid var(--border); border-radius: 4px; object-fit: contain; display: none; background: var(--bg); }
+  #marker-img-preview.visible { display: block; }
+  .img-upload-btn { width: 100%; padding: 7px; background: var(--surface2); border: 1px dashed var(--border2); border-radius: 4px; color: var(--text-dim); font-family: 'Crimson Text', serif; font-size: 13px; cursor: pointer; text-align: center; transition: all 0.15s; }
+  .img-upload-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .img-remove-btn { width: 100%; padding: 5px; background: transparent; border: 1px solid var(--red); border-radius: 4px; color: var(--red-bright); font-family: 'Crimson Text', serif; font-size: 12px; cursor: pointer; text-align: center; transition: all 0.15s; display: none; }
+  .img-remove-btn:hover { background: var(--red); color: var(--text); }
+  .img-remove-btn.visible { display: block; }
 
   /* STAT BLOCK */
   #stat-block { display: none; }
-  .stat-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-  }
-  .stat-cell {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 6px 8px;
-    text-align: center;
-  }
-  .stat-cell label {
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    display: block;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-  }
-  .stat-cell input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: var(--gold);
-    font-family: 'Cinzel', serif;
-    font-size: 15px;
-    text-align: center;
-    outline: none;
-  }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .stat-cell { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; text-align: center; }
+  .stat-cell label { font-size: 9px; letter-spacing: 0.08em; color: var(--text-muted); display: block; margin-bottom: 2px; text-transform: uppercase; }
+  .stat-cell input { width: 100%; background: transparent; border: none; color: var(--gold); font-family: 'Cinzel', serif; font-size: 15px; text-align: center; outline: none; }
 
-  #enter-location-btn {
-    width: 100%;
-    padding: 9px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    color: var(--text-dim);
-    font-family: 'Crimson Text', serif;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.15s;
-  }
+  #enter-location-btn { width: 100%; padding: 9px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 4px; color: var(--text-dim); font-family: 'Crimson Text', serif; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
   #enter-location-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
-  #enter-location-btn svg { width: 13px; height: 13px; }
 
-  /* ZOOM INDICATOR */
-  #zoom-indicator {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-    pointer-events: none;
-  }
+  #zoom-indicator { position: absolute; bottom: 12px; left: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 11px; color: var(--text-muted); pointer-events: none; z-index: 10; }
 
   /* MODAL */
-  #modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 500;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
+  #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: none; align-items: center; justify-content: center; }
   #modal-overlay.open { display: flex; }
-  #modal {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 24px;
-    width: 320px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  #modal h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 15px;
-    color: var(--gold);
-    letter-spacing: 0.06em;
-  }
-  #modal input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: 'Crimson Text', serif;
-    font-size: 15px;
-    padding: 8px 10px;
-    outline: none;
-  }
+  #modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 24px; width: 320px; display: flex; flex-direction: column; gap: 14px; }
+  #modal h3 { font-family: 'Cinzel', serif; font-size: 15px; color: var(--gold); letter-spacing: 0.06em; }
+  #modal input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'Crimson Text', serif; font-size: 15px; padding: 8px 10px; outline: none; }
   #modal input:focus { border-color: var(--gold-dim); }
   .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
-  .modal-btns button {
-    padding: 7px 16px;
-    border-radius: 4px;
-    font-family: 'Crimson Text', serif;
-    font-size: 13px;
-    cursor: pointer;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--text-dim);
-    transition: all 0.15s;
-  }
-  .modal-btns button.primary {
-    background: var(--gold-dim);
-    border-color: var(--gold-dim);
-    color: var(--bg);
-    font-weight: 600;
-  }
-  .modal-btns button:hover { color: var(--text); border-color: var(--border2); }
+  .modal-btns button { padding: 7px 16px; border-radius: 4px; font-family: 'Crimson Text', serif; font-size: 13px; cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--text-dim); transition: all 0.15s; }
+  .modal-btns button.primary { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--bg); font-weight: 600; }
+  .modal-btns button:hover { color: var(--text); }
   .modal-btns button.primary:hover { background: var(--gold); border-color: var(--gold); }
 
-  /* IMAGE UPLOAD */
-  #img-drop-zone {
-    border: 1px dashed var(--border2);
-    border-radius: 4px;
-    padding: 16px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  #img-drop-zone:hover { border-color: var(--gold-dim); color: var(--text-dim); }
-
-  /* IMAGE OBJECTS on canvas */
-  .map-image {
-    position: absolute;
-    cursor: move;
-    border: 1px solid transparent;
-    transition: border-color 0.1s;
-  }
+  /* MAP IMAGES */
+  .map-image { position: absolute; pointer-events: all; cursor: move; border: 1px solid transparent; user-select: none; }
   .map-image:hover { border-color: var(--gold-dim); }
   .map-image.selected { border-color: var(--gold); }
   .map-image img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-  .img-resize-handle {
-    position: absolute;
-    bottom: -4px; right: -4px;
-    width: 10px; height: 10px;
-    background: var(--gold);
-    border-radius: 50%;
-    cursor: se-resize;
-  }
+  .img-resize-handle { position: absolute; bottom: -5px; right: -5px; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; cursor: se-resize; pointer-events: all; }
+  .img-delete-handle { position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; background: var(--red-bright); border-radius: 50%; cursor: pointer; pointer-events: all; display: none; align-items: center; justify-content: center; font-size: 10px; color: white; line-height: 1; }
+  .map-image.selected .img-delete-handle { display: flex; }
 </style>
 </head>
 <body>
 
-<!-- TOOLBAR -->
 <div id="toolbar">
   <span class="title">⚔ Campaign Map</span>
   <div class="sep"></div>
 
-  <button class="tool-btn active" id="btn-pan" title="Pan (Space+drag)">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 8h12"/><circle cx="8" cy="8" r="2"/></svg>
+  <button class="tool-btn active" id="btn-pan">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v14M1 8h14"/></svg>
     Pan
   </button>
-  <button class="tool-btn" id="btn-paint" title="Paint terrain">
+  <button class="tool-btn" id="btn-paint">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l8-8 4-4-4 4M2 14l4-4"/><circle cx="13" cy="3" r="1.5" fill="currentColor" stroke="none"/></svg>
     Paint
   </button>
 
   <div class="sep"></div>
 
-  <!-- terrain swatches -->
   <div style="display:flex;gap:5px;align-items:center;">
     <div class="terrain-swatch active" data-terrain="grass" style="background:#3d5c2a;" title="Grass"></div>
     <div class="terrain-swatch" data-terrain="forest" style="background:#1f3d1a;" title="Forest"></div>
@@ -527,7 +213,6 @@
   <div class="breadcrumb" id="breadcrumb"></div>
 </div>
 
-<!-- MAIN -->
 <div id="main">
   <div id="canvas-wrap">
     <canvas id="map-canvas"></canvas>
@@ -536,16 +221,23 @@
     <div id="zoom-indicator">100%</div>
   </div>
 
-  <!-- SIDE PANEL -->
   <div id="side-panel" class="hidden">
     <div id="panel-header">
-      <div>
+      <div style="flex:1;min-width:0;">
         <div id="panel-type-badge"></div>
         <input id="panel-name-input" type="text" placeholder="Name this location..." />
       </div>
       <button id="panel-close">✕</button>
     </div>
     <div id="panel-body">
+
+      <div class="panel-section" id="marker-img-section">
+        <label>Marker Icon</label>
+        <img id="marker-img-preview" src="" alt="marker icon" />
+        <div class="img-upload-btn" id="marker-img-upload-btn">Upload custom icon</div>
+        <div class="img-remove-btn" id="marker-img-remove-btn">Remove custom icon</div>
+      </div>
+
       <div class="panel-section">
         <label>Notes</label>
         <textarea id="panel-notes" placeholder="History, lore, secrets..."></textarea>
@@ -555,14 +247,8 @@
         <label>Stat Block</label>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-            <div class="panel-section">
-              <label>CR</label>
-              <input type="text" id="stat-cr" placeholder="—" />
-            </div>
-            <div class="panel-section">
-              <label>HP</label>
-              <input type="text" id="stat-hp" placeholder="—" />
-            </div>
+            <div class="panel-section"><label>CR</label><input type="text" id="stat-cr" placeholder="—" /></div>
+            <div class="panel-section"><label>HP</label><input type="text" id="stat-hp" placeholder="—" /></div>
           </div>
           <div class="stat-row">
             <div class="stat-cell"><label>STR</label><input id="stat-str" value="10"/></div>
@@ -580,19 +266,16 @@
       </div>
 
       <div class="panel-section" id="enter-location-wrap" style="display:none;">
-        <button id="enter-location-btn">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 8h12"/></svg>
-          Enter this location →
-        </button>
+        <button id="enter-location-btn">Enter →</button>
       </div>
+
     </div>
   </div>
 </div>
 
-<!-- CONTEXT MENU -->
 <div id="ctx-menu">
   <div class="ctx-item town" data-type="town">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14V7l4-4 4 4v7H2z"/><path d="M10 14V9h4v5"/><rect x="5" y="9" width="2" height="3"/></svg>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14V7l4-4 4 4v7H2z"/><path d="M10 14V9h4v5"/><rect x="5" y="9" width="2" height="3" fill="currentColor"/></svg>
     Place Town
   </div>
   <div class="ctx-item dungeon" data-type="dungeon">
@@ -610,7 +293,6 @@
   </div>
 </div>
 
-<!-- NAME MODAL -->
 <div id="modal-overlay">
   <div id="modal">
     <h3 id="modal-title">Name this location</h3>
@@ -622,55 +304,26 @@
   </div>
 </div>
 
-<!-- IMAGE INPUT -->
 <input type="file" id="img-file-input" accept="image/*" style="display:none;" />
+<input type="file" id="marker-img-file-input" accept="image/*" style="display:none;" />
 
 <script>
-// ─── STATE ───────────────────────────────────────────────────────────────────
-const CELL = 40;
-const COLS = 60;
-const ROWS = 40;
+const CELL = 40, COLS = 60, ROWS = 40;
+const TERRAIN_COLORS = { grass:'#3d5c2a', forest:'#1f3d1a', mountain:'#6b6055', water:'#1e3d5c', desert:'#8a7040', snow:'#9aa8b0', lava:'#7a2a0a', void:'#0a0a0f' };
 
-const TERRAIN_COLORS = {
-  grass:    '#3d5c2a',
-  forest:   '#1f3d1a',
-  mountain: '#6b6055',
-  water:    '#1e3d5c',
-  desert:   '#8a7040',
-  snow:     '#9aa8b0',
-  lava:     '#7a2a0a',
-  void:     '#0a0a0f',
-};
-
-// Map stack: each entry is { id, name, type, grid, markers, images }
-let mapStack = [];
-let currentMap = null;
+let mapStack = [], currentMap = null;
+let viewX = 0, viewY = 0, viewScale = 1;
+let tool = 'pan', activeTerrain = 'grass', brushSize = 2;
+let showGrid = false, isPainting = false, isPanning = false;
+let panStart = { x:0, y:0 };
+let openPanelMarkerId = null;
+let ctxMapCoords = null, ctxMarkerId = null;
+let pendingMarkerType = null;
 
 function newMapData(id, name, type) {
-  return {
-    id,
-    name,
-    type,
-    grid: new Array(COLS * ROWS).fill('grass'),
-    markers: [],
-    images: [],
-  };
+  return { id, name, type, grid: new Array(COLS * ROWS).fill('grass'), markers: [], images: [] };
 }
 
-// View state
-let viewX = 0, viewY = 0, viewScale = 1;
-let tool = 'pan'; // 'pan' | 'paint'
-let activeTerrain = 'grass';
-let brushSize = 2;
-let showGrid = false;
-let isPainting = false;
-let isPanning = false;
-let panStart = { x: 0, y: 0 };
-let selectedMarkerId = null;
-let openPanelMarkerId = null;
-let ctxMenuTarget = null; // {x, y} in map coords or marker id
-
-// DOM
 const canvasWrap = document.getElementById('canvas-wrap');
 const mapCanvas = document.getElementById('map-canvas');
 const gridCanvas = document.getElementById('grid-canvas');
@@ -687,17 +340,18 @@ const enterLocationBtn = document.getElementById('enter-location-btn');
 const zoomIndicator = document.getElementById('zoom-indicator');
 const breadcrumbEl = document.getElementById('breadcrumb');
 const modalOverlay = document.getElementById('modal-overlay');
-const modalTitle = document.getElementById('modal-title');
 const modalInput = document.getElementById('modal-input');
+const markerImgPreview = document.getElementById('marker-img-preview');
+const markerImgUploadBtn = document.getElementById('marker-img-upload-btn');
+const markerImgRemoveBtn = document.getElementById('marker-img-remove-btn');
+const markerImgFileInput = document.getElementById('marker-img-file-input');
 const imgFileInput = document.getElementById('img-file-input');
-
 const mapCtx = mapCanvas.getContext('2d');
 const gridCtx = gridCanvas.getContext('2d');
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────────────
 function init() {
   const root = newMapData('world', 'The World', 'world');
-  root.grid.fill('grass');
   mapStack = [root];
   currentMap = root;
   resizeCanvases();
@@ -707,214 +361,209 @@ function init() {
 }
 
 function resizeCanvases() {
-  const w = canvasWrap.clientWidth;
-  const h = canvasWrap.clientHeight;
+  const w = canvasWrap.clientWidth, h = canvasWrap.clientHeight;
   mapCanvas.width = w; mapCanvas.height = h;
   gridCanvas.width = w; gridCanvas.height = h;
 }
 
 function centerView() {
-  const w = canvasWrap.clientWidth;
-  const h = canvasWrap.clientHeight;
-  const mapW = COLS * CELL;
-  const mapH = ROWS * CELL;
-  viewScale = Math.min(w / mapW, h / mapH) * 0.9;
-  viewX = (w - mapW * viewScale) / 2;
-  viewY = (h - mapH * viewScale) / 2;
+  const w = canvasWrap.clientWidth, h = canvasWrap.clientHeight;
+  viewScale = Math.min(w / (COLS * CELL), h / (ROWS * CELL)) * 0.9;
+  viewX = (w - COLS * CELL * viewScale) / 2;
+  viewY = (h - ROWS * CELL * viewScale) / 2;
 }
 
-// ─── RENDER ──────────────────────────────────────────────────────────────────
-function renderAll() {
-  renderMap();
-  renderGrid();
-  renderMarkers();
-}
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderAll() { renderMap(); renderGrid(); renderMarkers(); }
 
 function renderMap() {
   const w = mapCanvas.width, h = mapCanvas.height;
   mapCtx.clearRect(0, 0, w, h);
   mapCtx.fillStyle = '#0a0a0f';
   mapCtx.fillRect(0, 0, w, h);
-
   const grid = currentMap.grid;
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      const terrain = grid[r * COLS + c];
-      mapCtx.fillStyle = TERRAIN_COLORS[terrain] || '#3d5c2a';
-      const sx = viewX + c * CELL * viewScale;
-      const sy = viewY + r * CELL * viewScale;
-      const sw = CELL * viewScale + 0.5;
-      const sh = CELL * viewScale + 0.5;
-      mapCtx.fillRect(Math.floor(sx), Math.floor(sy), Math.ceil(sw), Math.ceil(sh));
+      mapCtx.fillStyle = TERRAIN_COLORS[grid[r * COLS + c]] || '#3d5c2a';
+      mapCtx.fillRect(Math.floor(viewX + c * CELL * viewScale), Math.floor(viewY + r * CELL * viewScale), Math.ceil(CELL * viewScale + 0.5), Math.ceil(CELL * viewScale + 0.5));
     }
   }
-
-  // Render images
-  currentMap.images.forEach(img => {
-    if (!img._el) return;
-    // images are positioned via DOM
-  });
 }
 
 function renderGrid() {
   const w = gridCanvas.width, h = gridCanvas.height;
   gridCtx.clearRect(0, 0, w, h);
   if (!showGrid) return;
-
   gridCtx.strokeStyle = 'rgba(255,255,255,0.08)';
   gridCtx.lineWidth = 0.5;
-
   for (let c = 0; c <= COLS; c++) {
     const x = Math.floor(viewX + c * CELL * viewScale) + 0.5;
-    gridCtx.beginPath();
-    gridCtx.moveTo(x, viewY);
-    gridCtx.lineTo(x, viewY + ROWS * CELL * viewScale);
-    gridCtx.stroke();
+    gridCtx.beginPath(); gridCtx.moveTo(x, viewY); gridCtx.lineTo(x, viewY + ROWS * CELL * viewScale); gridCtx.stroke();
   }
   for (let r = 0; r <= ROWS; r++) {
     const y = Math.floor(viewY + r * CELL * viewScale) + 0.5;
-    gridCtx.beginPath();
-    gridCtx.moveTo(viewX, y);
-    gridCtx.lineTo(viewX + COLS * CELL * viewScale, y);
-    gridCtx.stroke();
+    gridCtx.beginPath(); gridCtx.moveTo(viewX, y); gridCtx.lineTo(viewX + COLS * CELL * viewScale, y); gridCtx.stroke();
   }
 }
 
 function renderMarkers() {
-  markerLayer.innerHTML = '';
+  // Remove old marker els and image els
+  Array.from(markerLayer.children).forEach(el => {
+    if (el.classList.contains('marker') || el.classList.contains('map-image')) el.remove();
+  });
+
   currentMap.markers.forEach(m => {
     const el = document.createElement('div');
-    el.className = `marker type-${m.type}`;
+    el.className = `marker type-${m.type}${m.customIcon ? ' has-custom-img' : ''}`;
     el.dataset.id = m.id;
-
     const sx = viewX + m.cx * CELL * viewScale;
     const sy = viewY + m.cy * CELL * viewScale;
     el.style.left = sx + 'px';
     el.style.top = sy + 'px';
 
-    const iconSVGs = {
+    const icons = {
       town: `<svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.5"><path d="M2 14V7l4-4 4 4v7H2z"/><path d="M10 14V9h4v5"/><rect x="5" y="9" width="2" height="3" fill="white"/></svg>`,
       dungeon: `<svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.5"><path d="M8 2l6 12H2L8 2z"/><path d="M8 8v4M6 10h4"/></svg>`,
       npc: `<svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>`,
     };
 
-    el.innerHTML = `
-      <div class="marker-pin">${iconSVGs[m.type] || ''}</div>
-      <div class="marker-label">${m.name}</div>
-    `;
+    const pinContent = m.customIcon
+      ? `<img src="${m.customIcon}" alt="" />`
+      : (icons[m.type] || '');
 
-    el.addEventListener('click', e => { e.stopPropagation(); openMarkerPanel(m.id); });
-    el.addEventListener('contextmenu', e => {
-      e.preventDefault(); e.stopPropagation();
-      showCtxMenuForMarker(e, m.id);
-    });
-
+    const pinSize = Math.max(16, Math.round(30 * viewScale));
+    const fontSize = Math.max(8, Math.round(11 * viewScale));
+    const marginTop = Math.max(3, Math.round(5 * viewScale));
+    el.innerHTML = `<div class="marker-pin" style="width:${pinSize}px;height:${pinSize}px;">${pinContent}</div><div class="marker-label" style="font-size:${fontSize}px;margin-top:${marginTop}px;">${m.name}</div>`;
+    el.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); isPainting = false; openMarkerPanel(m.id); });
+    el.addEventListener('mousedown', e => { e.stopPropagation(); });
+    el.addEventListener('contextmenu', e => { e.preventDefault(); e.stopPropagation(); showCtxMenuForMarker(e, m.id); });
     markerLayer.appendChild(el);
   });
 
-  // Re-render images
-  currentMap.images.forEach(img => renderImageObj(img));
+  currentMap.images.forEach(img => createImageEl(img));
 }
 
-// ─── IMAGE OBJECTS ────────────────────────────────────────────────────────────
-function renderImageObj(img) {
-  let el = document.getElementById('img-' + img.id);
-  if (!el) {
-    el = document.createElement('div');
-    el.className = 'map-image';
-    el.id = 'img-' + img.id;
-    const imgEl = document.createElement('img');
-    imgEl.src = img.src;
-    el.appendChild(imgEl);
-    const handle = document.createElement('div');
-    handle.className = 'img-resize-handle';
-    el.appendChild(handle);
-    markerLayer.appendChild(el);
-    makeDraggable(el, img);
-    makeResizable(handle, el, img);
-  }
-  const sx = viewX + img.x * viewScale;
-  const sy = viewY + img.y * viewScale;
-  el.style.left = sx + 'px';
-  el.style.top = sy + 'px';
+// ── MAP IMAGES ────────────────────────────────────────────────────────────────
+function createImageEl(img) {
+  const el = document.createElement('div');
+  el.className = 'map-image';
+  el.id = 'mapimg-' + img.id;
+  positionImageEl(el, img);
+
+  const imgEl = document.createElement('img');
+  imgEl.src = img.src;
+  el.appendChild(imgEl);
+
+  const resizeHandle = document.createElement('div');
+  resizeHandle.className = 'img-resize-handle';
+  el.appendChild(resizeHandle);
+
+  const deleteHandle = document.createElement('div');
+  deleteHandle.className = 'img-delete-handle';
+  deleteHandle.textContent = '✕';
+  el.appendChild(deleteHandle);
+
+  markerLayer.appendChild(el);
+
+  // Click to select
+  el.addEventListener('mousedown', e => {
+    if (e.target === resizeHandle || e.target === deleteHandle) return;
+    e.stopPropagation();
+    selectImage(img.id);
+    startDragImage(e, img);
+  });
+
+  // Delete
+  deleteHandle.addEventListener('click', e => {
+    e.stopPropagation();
+    currentMap.images = currentMap.images.filter(i => i.id !== img.id);
+    el.remove();
+  });
+
+  // Resize
+  resizeHandle.addEventListener('mousedown', e => {
+    e.stopPropagation();
+    const startX = e.clientX, startY = e.clientY;
+    const startW = img.w, startH = img.h;
+    const onMove = e2 => {
+      img.w = Math.max(30, startW + (e2.clientX - startX) / viewScale);
+      img.h = Math.max(30, startH + (e2.clientY - startY) / viewScale);
+      positionImageEl(el, img);
+    };
+    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  });
+}
+
+function positionImageEl(el, img) {
+  el.style.left = (viewX + img.x * viewScale) + 'px';
+  el.style.top = (viewY + img.y * viewScale) + 'px';
   el.style.width = (img.w * viewScale) + 'px';
   el.style.height = (img.h * viewScale) + 'px';
 }
 
-function makeDraggable(el, img) {
-  let startX, startY, startImgX, startImgY;
-  el.addEventListener('mousedown', e => {
-    if (e.target.classList.contains('img-resize-handle')) return;
-    e.stopPropagation();
-    startX = e.clientX; startY = e.clientY;
-    startImgX = img.x; startImgY = img.y;
-    const onMove = e2 => {
-      img.x = startImgX + (e2.clientX - startX) / viewScale;
-      img.y = startImgY + (e2.clientY - startY) / viewScale;
-      renderImageObj(img);
-    };
-    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-  });
+function selectImage(id) {
+  document.querySelectorAll('.map-image').forEach(el => el.classList.remove('selected'));
+  const el = document.getElementById('mapimg-' + id);
+  if (el) el.classList.add('selected');
 }
 
-function makeResizable(handle, el, img) {
-  let startX, startY, startW, startH;
-  handle.addEventListener('mousedown', e => {
-    e.stopPropagation();
-    startX = e.clientX; startY = e.clientY;
-    startW = img.w; startH = img.h;
-    const onMove = e2 => {
-      img.w = Math.max(40, startW + (e2.clientX - startX) / viewScale);
-      img.h = Math.max(40, startH + (e2.clientY - startY) / viewScale);
-      renderImageObj(img);
-    };
-    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-  });
-}
-
-// ─── PAINTING ────────────────────────────────────────────────────────────────
-function screenToMap(sx, sy) {
-  return {
-    c: (sx - viewX) / (CELL * viewScale),
-    r: (sy - viewY) / (CELL * viewScale),
+function startDragImage(e, img) {
+  const startX = e.clientX, startY = e.clientY;
+  const startImgX = img.x, startImgY = img.y;
+  const el = document.getElementById('mapimg-' + img.id);
+  const onMove = e2 => {
+    img.x = startImgX + (e2.clientX - startX) / viewScale;
+    img.y = startImgY + (e2.clientY - startY) / viewScale;
+    if (el) positionImageEl(el, img);
   };
+  const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+}
+
+// Deselect images on canvas click
+canvasWrap.addEventListener('click', () => {
+  document.querySelectorAll('.map-image').forEach(el => el.classList.remove('selected'));
+});
+
+// ── PAINT ─────────────────────────────────────────────────────────────────────
+function screenToCell(sx, sy) {
+  return { c: (sx - viewX) / (CELL * viewScale), r: (sy - viewY) / (CELL * viewScale) };
 }
 
 function paintAt(sx, sy) {
-  const { c, r } = screenToMap(sx, sy);
+  const { c, r } = screenToCell(sx, sy);
   const ci = Math.floor(c), ri = Math.floor(r);
   const half = Math.floor(brushSize / 2);
   for (let dr = -half; dr <= half; dr++) {
     for (let dc = -half; dc <= half; dc++) {
       const rr = ri + dr, cc = ci + dc;
-      if (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS) {
-        currentMap.grid[rr * COLS + cc] = activeTerrain;
-      }
+      if (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS) currentMap.grid[rr * COLS + cc] = activeTerrain;
     }
   }
   renderMap();
 }
 
-// ─── PAN / ZOOM ───────────────────────────────────────────────────────────────
+// ── PAN / ZOOM ────────────────────────────────────────────────────────────────
 canvasWrap.addEventListener('wheel', e => {
   e.preventDefault();
   const factor = e.deltaY < 0 ? 1.1 : 0.9;
   const rect = canvasWrap.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
   viewX = mx - (mx - viewX) * factor;
   viewY = my - (my - viewY) * factor;
   viewScale = Math.max(0.1, Math.min(8, viewScale * factor));
   zoomIndicator.textContent = Math.round(viewScale * 100) + '%';
   renderAll();
+  renderMarkers();
 }, { passive: false });
 
 canvasWrap.addEventListener('mousedown', e => {
-  if (e.button === 1 || (e.button === 0 && tool === 'pan')) {
+  // Only handle direct canvas clicks (not markers/images which stopPropagation)
+  if (e.button === 0 && tool === 'pan') {
     isPanning = true;
     panStart = { x: e.clientX - viewX, y: e.clientY - viewY };
     canvasWrap.style.cursor = 'grabbing';
@@ -925,13 +574,26 @@ canvasWrap.addEventListener('mousedown', e => {
     const rect = canvasWrap.getBoundingClientRect();
     paintAt(e.clientX - rect.left, e.clientY - rect.top);
   }
+  if (e.button === 1) {
+    isPanning = true;
+    panStart = { x: e.clientX - viewX, y: e.clientY - viewY };
+  }
 });
 
 window.addEventListener('mousemove', e => {
   if (isPanning) {
     viewX = e.clientX - panStart.x;
     viewY = e.clientY - panStart.y;
-    renderAll();
+    // Update image positions without full re-render
+    currentMap.images.forEach(img => {
+      const el = document.getElementById('mapimg-' + img.id);
+      if (el) positionImageEl(el, img);
+    });
+    currentMap.markers.forEach(m => {
+      const el = markerLayer.querySelector(`[data-id="${m.id}"]`);
+      if (el) { el.style.left = (viewX + m.cx * CELL * viewScale) + 'px'; el.style.top = (viewY + m.cy * CELL * viewScale) + 'px'; }
+    });
+    renderMap(); renderGrid();
     return;
   }
   if (isPainting) {
@@ -940,30 +602,24 @@ window.addEventListener('mousemove', e => {
   }
 });
 
-window.addEventListener('mouseup', e => {
-  isPanning = false;
-  isPainting = false;
+window.addEventListener('mouseup', () => {
+  isPanning = false; isPainting = false;
   if (tool === 'pan') canvasWrap.style.cursor = 'grab';
   else canvasWrap.style.cursor = 'crosshair';
 });
 
-// ─── CONTEXT MENU ─────────────────────────────────────────────────────────────
-let ctxMapCoords = null;
-let ctxMarkerId = null;
-
+// ── CONTEXT MENU ──────────────────────────────────────────────────────────────
 canvasWrap.addEventListener('contextmenu', e => {
   e.preventDefault();
   const rect = canvasWrap.getBoundingClientRect();
-  const { c, r } = screenToMap(e.clientX - rect.left, e.clientY - rect.top);
-  ctxMapCoords = { c, r };
+  ctxMapCoords = screenToCell(e.clientX - rect.left, e.clientY - rect.top);
   ctxMarkerId = null;
   ctxDelete.style.display = 'none';
   showCtxMenu(e.clientX, e.clientY);
 });
 
 function showCtxMenuForMarker(e, markerId) {
-  ctxMarkerId = markerId;
-  ctxMapCoords = null;
+  ctxMarkerId = markerId; ctxMapCoords = null;
   ctxDelete.style.display = 'flex';
   showCtxMenu(e.clientX, e.clientY);
 }
@@ -975,18 +631,15 @@ function showCtxMenu(x, y) {
 }
 
 document.addEventListener('click', () => { ctxMenu.style.display = 'none'; });
-document.addEventListener('contextmenu', e => {
-  if (!canvasWrap.contains(e.target) && !e.target.closest('.marker')) {
-    ctxMenu.style.display = 'none';
-  }
-});
 
-// Place marker from context menu
 document.querySelectorAll('.ctx-item[data-type]').forEach(item => {
-  item.addEventListener('click', e => {
-    const type = item.dataset.type;
+  item.addEventListener('click', () => {
     ctxMenu.style.display = 'none';
-    openNameModal(type);
+    pendingMarkerType = item.dataset.type;
+    document.getElementById('modal-title').textContent = `Name this ${pendingMarkerType}`;
+    modalInput.value = '';
+    modalOverlay.classList.add('open');
+    setTimeout(() => modalInput.focus(), 50);
   });
 });
 
@@ -994,76 +647,67 @@ ctxDelete.addEventListener('click', () => {
   if (ctxMarkerId) {
     currentMap.markers = currentMap.markers.filter(m => m.id !== ctxMarkerId);
     if (openPanelMarkerId === ctxMarkerId) closePanel();
-    ctxMarkerId = null;
     renderMarkers();
   }
   ctxMenu.style.display = 'none';
 });
 
-// ─── MODAL ───────────────────────────────────────────────────────────────────
-let pendingMarkerType = null;
-
-function openNameModal(type) {
-  pendingMarkerType = type;
-  modalTitle.textContent = `Name this ${type}`;
-  modalInput.value = '';
-  modalOverlay.classList.add('open');
-  setTimeout(() => modalInput.focus(), 50);
-}
-
-document.getElementById('modal-cancel').addEventListener('click', () => {
-  modalOverlay.classList.remove('open');
-});
-
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+document.getElementById('modal-cancel').addEventListener('click', () => modalOverlay.classList.remove('open'));
 document.getElementById('modal-confirm').addEventListener('click', confirmModal);
 modalInput.addEventListener('keydown', e => { if (e.key === 'Enter') confirmModal(); });
 
 function confirmModal() {
   const name = modalInput.value.trim() || 'Unnamed';
   modalOverlay.classList.remove('open');
-  if (ctxMapCoords) {
-    placeMarker(pendingMarkerType, name, ctxMapCoords.c, ctxMapCoords.r);
-  }
-}
-
-function placeMarker(type, name, c, r) {
+  if (!ctxMapCoords) return;
   const marker = {
     id: 'marker-' + Date.now(),
-    type,
+    type: pendingMarkerType,
     name,
-    cx: c,
-    cy: r,
+    cx: ctxMapCoords.c,
+    cy: ctxMapCoords.r,
     notes: '',
-    childMapId: (type !== 'npc') ? 'child-' + Date.now() : null,
-    stats: { cr: '', hp: '', str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, traits: '' },
+    customIcon: null,
+    childMapId: pendingMarkerType !== 'npc' ? 'child-' + Date.now() : null,
+    stats: { cr:'', hp:'', str:10, dex:10, con:10, int:10, wis:10, cha:10, traits:'' },
   };
   currentMap.markers.push(marker);
-
-  if (type !== 'npc') {
-    const childMap = newMapData(marker.childMapId, name, type);
-    const fill = type === 'dungeon' ? 'void' : 'grass';
-    childMap.grid.fill(fill);
-    mapStack.push(childMap);
+  if (pendingMarkerType !== 'npc') {
+    const child = newMapData(marker.childMapId, name, pendingMarkerType);
+    child.grid.fill(pendingMarkerType === 'dungeon' ? 'void' : 'grass');
+    mapStack.push(child);
   }
-
   renderMarkers();
   openMarkerPanel(marker.id);
 }
 
-// ─── PANEL ───────────────────────────────────────────────────────────────────
+// ── PANEL ─────────────────────────────────────────────────────────────────────
 function openMarkerPanel(markerId) {
   const marker = currentMap.markers.find(m => m.id === markerId);
   if (!marker) return;
   openPanelMarkerId = markerId;
 
-  const typeColors = { town: '#5a9a5a', dungeon: '#c44', npc: '#6a6abf' };
+  const typeColors = { town:'#5a9a5a', dungeon:'#c44', npc:'#6a6abf' };
+  const c = typeColors[marker.type];
   panelTypeBadge.textContent = marker.type.toUpperCase();
-  panelTypeBadge.style.background = typeColors[marker.type] + '33';
-  panelTypeBadge.style.color = typeColors[marker.type];
-  panelTypeBadge.style.border = '1px solid ' + typeColors[marker.type] + '66';
+  panelTypeBadge.style.cssText = `background:${c}33;color:${c};border:1px solid ${c}66;font-size:10px;font-family:'Cinzel',serif;letter-spacing:0.08em;padding:2px 7px;border-radius:3px;`;
 
   panelNameInput.value = marker.name;
   panelNotes.value = marker.notes || '';
+
+  // Marker icon section
+  if (marker.customIcon) {
+    markerImgPreview.src = marker.customIcon;
+    markerImgPreview.classList.add('visible');
+    markerImgUploadBtn.textContent = 'Replace icon';
+    markerImgRemoveBtn.classList.add('visible');
+  } else {
+    markerImgPreview.src = '';
+    markerImgPreview.classList.remove('visible');
+    markerImgUploadBtn.textContent = 'Upload custom icon';
+    markerImgRemoveBtn.classList.remove('visible');
+  }
 
   if (marker.type === 'npc') {
     statBlock.style.display = 'block';
@@ -1071,27 +715,15 @@ function openMarkerPanel(markerId) {
     const s = marker.stats;
     document.getElementById('stat-cr').value = s.cr || '';
     document.getElementById('stat-hp').value = s.hp || '';
-    document.getElementById('stat-str').value = s.str || 10;
-    document.getElementById('stat-dex').value = s.dex || 10;
-    document.getElementById('stat-con').value = s.con || 10;
-    document.getElementById('stat-int').value = s.int || 10;
-    document.getElementById('stat-wis').value = s.wis || 10;
-    document.getElementById('stat-cha').value = s.cha || 10;
+    ['str','dex','con','int','wis','cha'].forEach(k => document.getElementById('stat-' + k).value = s[k] || 10);
     document.getElementById('stat-traits').value = s.traits || '';
   } else {
     statBlock.style.display = 'none';
     enterLocationWrap.style.display = 'block';
-    enterLocationBtn.textContent = '';
-    enterLocationBtn.innerHTML = `<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 8h12"/></svg> Enter ${marker.name} →`;
+    enterLocationBtn.textContent = `Enter ${marker.name} →`;
   }
 
   sidePanel.classList.remove('hidden');
-}
-
-function closePanel() {
-  savePanelToMarker();
-  openPanelMarkerId = null;
-  sidePanel.classList.add('hidden');
 }
 
 function savePanelToMarker() {
@@ -1104,16 +736,17 @@ function savePanelToMarker() {
     marker.stats = {
       cr: document.getElementById('stat-cr').value,
       hp: document.getElementById('stat-hp').value,
-      str: document.getElementById('stat-str').value,
-      dex: document.getElementById('stat-dex').value,
-      con: document.getElementById('stat-con').value,
-      int: document.getElementById('stat-int').value,
-      wis: document.getElementById('stat-wis').value,
-      cha: document.getElementById('stat-cha').value,
       traits: document.getElementById('stat-traits').value,
     };
+    ['str','dex','con','int','wis','cha'].forEach(k => marker.stats[k] = document.getElementById('stat-' + k).value);
   }
   renderMarkers();
+}
+
+function closePanel() {
+  savePanelToMarker();
+  openPanelMarkerId = null;
+  sidePanel.classList.add('hidden');
 }
 
 document.getElementById('panel-close').addEventListener('click', closePanel);
@@ -1121,42 +754,88 @@ document.getElementById('panel-close').addEventListener('click', closePanel);
 enterLocationBtn.addEventListener('click', () => {
   savePanelToMarker();
   const marker = currentMap.markers.find(m => m.id === openPanelMarkerId);
-  if (!marker || !marker.childMapId) return;
-  const childMap = mapStack.find(m => m.id === marker.childMapId);
-  if (!childMap) return;
+  if (!marker?.childMapId) return;
+  const child = mapStack.find(m => m.id === marker.childMapId);
+  if (!child) return;
   closePanel();
-  currentMap = childMap;
+  currentMap = child;
   centerView();
   renderAll();
   updateBreadcrumb();
 });
 
-// ─── BREADCRUMB ───────────────────────────────────────────────────────────────
+// ── MARKER ICON UPLOAD ────────────────────────────────────────────────────────
+markerImgUploadBtn.addEventListener('click', () => markerImgFileInput.click());
+
+markerImgFileInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file || !openPanelMarkerId) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const marker = currentMap.markers.find(m => m.id === openPanelMarkerId);
+    if (!marker) return;
+    marker.customIcon = ev.target.result;
+    markerImgPreview.src = ev.target.result;
+    markerImgPreview.classList.add('visible');
+    markerImgUploadBtn.textContent = 'Replace icon';
+    markerImgRemoveBtn.classList.add('visible');
+    renderMarkers();
+  };
+  reader.readAsDataURL(file);
+  markerImgFileInput.value = '';
+});
+
+markerImgRemoveBtn.addEventListener('click', () => {
+  const marker = currentMap.markers.find(m => m.id === openPanelMarkerId);
+  if (!marker) return;
+  marker.customIcon = null;
+  markerImgPreview.src = '';
+  markerImgPreview.classList.remove('visible');
+  markerImgUploadBtn.textContent = 'Upload custom icon';
+  markerImgRemoveBtn.classList.remove('visible');
+  renderMarkers();
+});
+
+// ── CANVAS IMAGE IMPORT ───────────────────────────────────────────────────────
+document.getElementById('btn-image').addEventListener('click', () => imgFileInput.click());
+
+imgFileInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = {
+      id: 'i' + Date.now(),
+      src: ev.target.result,
+      x: (canvasWrap.clientWidth / 2 - viewX) / viewScale - 100,
+      y: (canvasWrap.clientHeight / 2 - viewY) / viewScale - 100,
+      w: 200, h: 200,
+    };
+    currentMap.images.push(img);
+    createImageEl(img);
+  };
+  reader.readAsDataURL(file);
+  imgFileInput.value = '';
+});
+
+// ── BREADCRUMB ────────────────────────────────────────────────────────────────
 function updateBreadcrumb() {
   const idx = mapStack.indexOf(currentMap);
-  const visible = mapStack.slice(0, idx + 1);
-  breadcrumbEl.innerHTML = visible.map((m, i) => {
-    if (i === visible.length - 1) {
-      return `<span class="current">${m.name}</span>`;
-    }
-    return `<span onclick="navigateTo('${m.id}')">${m.name}</span><span class="crumb-sep">›</span>`;
-  }).join('');
+  breadcrumbEl.innerHTML = mapStack.slice(0, idx + 1).map((m, i, arr) =>
+    i === arr.length - 1
+      ? `<span class="current">${m.name}</span>`
+      : `<span onclick="navigateTo('${m.id}')">${m.name}</span><span class="crumb-sep">›</span>`
+  ).join('');
 }
 
-function navigateTo(mapId) {
-  savePanelToMarker();
-  closePanel();
-  const map = mapStack.find(m => m.id === mapId);
-  if (map) {
-    currentMap = map;
-    centerView();
-    renderAll();
-    updateBreadcrumb();
-  }
+function navigateTo(id) {
+  savePanelToMarker(); closePanel();
+  const map = mapStack.find(m => m.id === id);
+  if (map) { currentMap = map; centerView(); renderAll(); updateBreadcrumb(); }
 }
 window.navigateTo = navigateTo;
 
-// ─── TOOLBAR BUTTONS ──────────────────────────────────────────────────────────
+// ── TOOLBAR ───────────────────────────────────────────────────────────────────
 document.getElementById('btn-pan').addEventListener('click', () => setTool('pan'));
 document.getElementById('btn-paint').addEventListener('click', () => setTool('paint'));
 
@@ -1164,7 +843,7 @@ function setTool(t) {
   tool = t;
   document.getElementById('btn-pan').classList.toggle('active', t === 'pan');
   document.getElementById('btn-paint').classList.toggle('active', t === 'paint');
-  canvasWrap.style.cursor = t === 'pan' ? 'grab' : 'crosshair';
+  canvasWrap.classList.toggle('paint-mode', t === 'paint');
 }
 
 document.querySelectorAll('.terrain-swatch').forEach(sw => {
@@ -1176,9 +855,7 @@ document.querySelectorAll('.terrain-swatch').forEach(sw => {
   });
 });
 
-document.getElementById('brush-size').addEventListener('input', e => {
-  brushSize = parseInt(e.target.value);
-});
+document.getElementById('brush-size').addEventListener('input', e => { brushSize = parseInt(e.target.value); });
 
 document.getElementById('btn-grid').addEventListener('click', () => {
   showGrid = !showGrid;
@@ -1186,51 +863,19 @@ document.getElementById('btn-grid').addEventListener('click', () => {
   renderGrid();
 });
 
-// ─── IMAGE IMPORT ─────────────────────────────────────────────────────────────
-document.getElementById('btn-image').addEventListener('click', () => {
-  imgFileInput.click();
-});
-
-imgFileInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = {
-      id: 'img-' + Date.now(),
-      src: ev.target.result,
-      x: (canvasWrap.clientWidth / 2 - viewX) / viewScale - 100,
-      y: (canvasWrap.clientHeight / 2 - viewY) / viewScale - 100,
-      w: 200,
-      h: 200,
-    };
-    currentMap.images.push(img);
-    renderImageObj(img);
-  };
-  reader.readAsDataURL(file);
-  imgFileInput.value = '';
-});
-
-// ─── SAVE / LOAD ─────────────────────────────────────────────────────────────
+// ── SAVE / LOAD ───────────────────────────────────────────────────────────────
 document.getElementById('btn-save').addEventListener('click', () => {
   savePanelToMarker();
-  const data = mapStack.map(m => ({
-    id: m.id, name: m.name, type: m.type,
-    grid: Array.from(m.grid),
-    markers: m.markers,
-    images: m.images.map(img => ({ ...img })),
-  }));
-  const blob = new Blob([JSON.stringify({ maps: data, currentId: currentMap.id })], { type: 'application/json' });
+  const data = { currentId: currentMap.id, maps: mapStack.map(m => ({ ...m, grid: Array.from(m.grid) })) };
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
   a.download = 'campaign-map.json';
   a.click();
 });
 
 document.getElementById('btn-load').addEventListener('click', () => {
   const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
+  input.type = 'file'; input.accept = '.json';
   input.onchange = e => {
     const file = e.target.files[0];
     if (!file) return;
@@ -1238,31 +883,21 @@ document.getElementById('btn-load').addEventListener('click', () => {
     reader.onload = ev => {
       try {
         const data = JSON.parse(ev.target.result);
-        mapStack = data.maps.map(m => ({
-          ...m,
-          grid: m.grid,
-        }));
+        mapStack = data.maps;
         currentMap = mapStack.find(m => m.id === data.currentId) || mapStack[0];
-        closePanel();
-        centerView();
-        renderAll();
-        updateBreadcrumb();
-      } catch(err) { alert('Could not load file.'); }
+        closePanel(); centerView(); renderAll(); updateBreadcrumb();
+      } catch { alert('Could not load file.'); }
     };
     reader.readAsText(file);
   };
   input.click();
 });
 
-// ─── RESIZE ───────────────────────────────────────────────────────────────────
-window.addEventListener('resize', () => {
-  resizeCanvases();
-  renderAll();
-});
+// ── RESIZE ────────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => { resizeCanvases(); renderAll(); });
 
-// ─── START ────────────────────────────────────────────────────────────────────
+// ── START ─────────────────────────────────────────────────────────────────────
 init();
-setTool('pan');
 </script>
 </body>
 </html>
